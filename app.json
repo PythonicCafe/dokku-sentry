@@ -1,17 +1,14 @@
 {
-	"name": "Sentry",
-	"description": "Sentry is a realtime event logging and aggregation platform",
-	"repository": "https://github.com/mimischi/dokku-sentry",
-	"website": "http://getsentry.com",
-	"keywords": [
-		"logging",
-		"error"
-	],
-	"addons": [],
-	"env": {},
-	"scripts": {
-		"dokku": {
-			"postdeploy": "sentry --config=sentry.conf.py upgrade --noinput"
-    }
+  "cron": [
+  ],
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web check",
+        "description": "Check login page (home will redirect there)",
+        "path": "/auth/login/sentry/"
+      }
+    ]
   }
 }

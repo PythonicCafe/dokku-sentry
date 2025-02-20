@@ -82,11 +82,12 @@ need to set the following settings accordingly.
 
 ```
 dokku config:set --no-restart sentry SENTRY_EMAIL_HOST=smtp.example.com
-dokku config:set --no-restart sentry SENTRY_EMAIL_USER=<yourusername>
 dokku config:set --no-restart sentry SENTRY_EMAIL_PASSWORD=<yourmailpassword>
 dokku config:set --no-restart sentry SENTRY_EMAIL_PORT=25
-dokku config:set --no-restart sentry SENTRY_SERVER_EMAIL=sentry@example.com
+dokku config:set --no-restart sentry SENTRY_EMAIL_USER=<yourusername>
 dokku config:set --no-restart sentry SENTRY_EMAIL_USE_TLS=True
+dokku config:set --no-restart sentry SENTRY_SERVER_EMAIL=sentry@example.com
+dokku config:set --no-restart sentry SENTRY_USE_SSL=False
 ```
 
 ## Persistent storage
@@ -109,27 +110,6 @@ the domain.
 dokku domains:set sentry sentry.example.com
 ```
 
-The parent Dockerfile, provided by the sentry project, exposes port `9000` for
-web requests. Dokku will set up this port for outside communication, as
-explained in [its
-documentation](http://dokku.viewdocs.io/dokku/advanced-usage/proxy-management/#proxy-port-mapping).
-Because we want Sentry to be available on the default port `80` (or `443` for
-SSL), we need to fiddle around with the proxy settings.
-
-First add the proxy mapping that sentry uses.
-
-```
-dokku proxy:ports-add sentry http:80:9000
-```
-
-Then, remove the proxy mapping added by Dokku.
-
-```
-dokku proxy:ports-remove sentry http:80:5000
-```
-
-If `dokku proxy:report sentry` shows more than one port mapping, 
-remove all port mappings except the added above.
 
 ## Push Sentry to Dokku
 
@@ -162,7 +142,7 @@ git remote add dokku dokku@example.com:sentry
 Now we can push Sentry to Dokku (_before_ moving on to the [next part](#domain-and-ssl-certificate)).
 
 ```
-git push dokku master
+git push dokku main
 ```
 
 ## SSL certificate
@@ -171,9 +151,8 @@ Last but not least, we can go an grab the SSL certificate from [Let's
 Encrypt](https://letsencrypt.org/).
 
 ```
-dokku config:set --no-restart sentry DOKKU_LETSENCRYPT_EMAIL=you@example.com
-dokku config:set --no-restart sentry SENTRY_USE_SSL=True
-dokku letsencrypt sentry
+dokku letsencrypt:set email you@example.com
+dokku letsencrypt:enable sentry
 ```
 
 ## Create a user
