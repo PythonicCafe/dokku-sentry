@@ -101,7 +101,7 @@ services:
       - "8025:8025"
 
   messaging:
-    image: "redis:6.2-alpine"
+    image: "redis:5.0.14-alpine"
     env_file:
       - "docker/env/messaging"
       - "docker/env/messaging.local"
