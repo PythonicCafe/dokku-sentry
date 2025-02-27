@@ -1,4 +1,8 @@
 FROM sentry:9.1.2-onbuild
 
-RUN groupadd -r dokku && useradd -r -m -u 32768 -g dokku dokku
-USER dokku
+# Create a non-root user to run the app
+RUN addgroup --gid ${GID:-1000} django \
+  && adduser --disabled-password --gecos "" --home /app --uid ${UID:-1000} --gid ${GID:-1000} django \
+  && chown -R django:django /app
+
+USER django
