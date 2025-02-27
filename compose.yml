@@ -79,7 +79,7 @@ services:
       - "docker/env/db.local"
     user: "${UID:-1000}:${GID:-1000}"
     shm_size: "2g"
-    image: "postgres:11-bookworm"
+    image: "postgres:17-bookworm"
     command: -c "config_file=/etc/postgresql/postgresql.conf"
     volumes:
       - ${PWD}/docker/data/db:/var/lib/postgresql/data
